@@ -82,7 +82,7 @@ const HomePage: React.FC = async () => {
           }
         >
           {subscriptionPlansSection.plans.map((plan) => (
-            <UISubscriptionPlan plan={plan} />
+            <UISubscriptionPlan plan={plan} key={plan.name} />
           ))}
         </div>
       </UISection>

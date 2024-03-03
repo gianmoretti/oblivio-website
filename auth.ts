@@ -4,8 +4,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
-import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
+import { User } from './app/lib/model';
 
 async function getUser(email: string): Promise<User | undefined> {
     try {
