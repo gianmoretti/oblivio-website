@@ -1,15 +1,15 @@
 import { sql } from "@vercel/postgres";
 import {
-  CustomerField,
-  CustomersTableType,
-  InvoiceForm,
-  InvoicesTable,
-  LatestInvoiceRaw,
-  User,
+  DesignatedField,
+  DesignatedTableType,
+  AssetForm,
+  AssetsTable,
+  LatestAssetRaw,
   Revenue,
 } from "./definitions";
 import { formatCurrency } from "./utils";
 import { unstable_noStore as noStore } from 'next/cache';
+import { User } from "./model";
 
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
@@ -35,25 +35,25 @@ export async function fetchRevenue() {
   }
 }
 
-export async function fetchLatestInvoices() {
+export async function fetchLatestAssets() {
   noStore();
 
   try {
-    const data = await sql<LatestInvoiceRaw>`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
-      ORDER BY invoices.date DESC
+    const data = await sql<LatestAssetRaw>`
+      SELECT assets.amount, designated.name, designated.image_url, designated.email, assets.id
+      FROM invoices as assets
+      JOIN customers as designated ON assets.customer_id = designated.id
+      ORDER BY assets.date DESC
       LIMIT 5`;
 
-    const latestInvoices = data.rows.map((invoice) => ({
+    const latestAssets = data.rows.map((invoice) => ({
       ...invoice,
       amount: formatCurrency(invoice.amount),
     }));
-    return latestInvoices;
+    return latestAssets;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch the latest invoices.");
+    throw new Error("Failed to fetch the latest assets.");
   }
 }
 
@@ -64,29 +64,29 @@ export async function fetchCardData() {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
+    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices as assets`;
+    const designatedCountPromise = sql`SELECT COUNT(*) FROM customers as designated`;
     const invoiceStatusPromise = sql`SELECT
          SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
          SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`;
+         FROM invoices as assets`;
 
     const data = await Promise.all([
       invoiceCountPromise,
-      customerCountPromise,
+      designatedCountPromise,
       invoiceStatusPromise,
     ]);
 
-    const numberOfInvoices = Number(data[0].rows[0].count ?? "0");
-    const numberOfCustomers = Number(data[1].rows[0].count ?? "0");
-    const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? "0");
-    const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? "0");
+    const numberOfAssets = Number(data[0].rows[0].count ?? "0");
+    const numberOfDesignated = Number(data[1].rows[0].count ?? "0");
+    const totalPaidAssets = formatCurrency(data[2].rows[0].paid ?? "0");
+    const totalPendingAssets = formatCurrency(data[2].rows[0].pending ?? "0");
 
     return {
-      numberOfCustomers,
-      numberOfInvoices,
-      totalPaidInvoices,
-      totalPendingInvoices,
+      numberOfDesignated,
+      numberOfAssets,
+      totalPaidAssets,
+      totalPendingAssets,
     };
   } catch (error) {
     console.error("Database Error:", error);
@@ -95,76 +95,76 @@ export async function fetchCardData() {
 }
 
 const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredInvoices(
+export async function fetchFilteredAssets(
   query: string,
   currentPage: number,
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const invoices = await sql<InvoicesTable>`
+    const assets = await sql<AssetsTable>`
       SELECT
-        invoices.id,
-        invoices.amount,
-        invoices.date,
-        invoices.status,
-        customers.name,
-        customers.email,
-        customers.image_url
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
+        assets.id,
+        assets.amount,
+        assets.date,
+        assets.status,
+        designated.name,
+        designated.email,
+        designated.image_url
+      FROM invoices as assets
+      JOIN customers as designated ON assets.customer_id = designated.id
       WHERE
-        customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`} OR
-        invoices.amount::text ILIKE ${`%${query}%`} OR
-        invoices.date::text ILIKE ${`%${query}%`} OR
-        invoices.status ILIKE ${`%${query}%`}
-      ORDER BY invoices.date DESC
+        designated.name ILIKE ${`%${query}%`} OR
+        designated.email ILIKE ${`%${query}%`} OR
+        assets.amount::text ILIKE ${`%${query}%`} OR
+        assets.date::text ILIKE ${`%${query}%`} OR
+        assets.status ILIKE ${`%${query}%`}
+      ORDER BY assets.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
-    return invoices.rows;
+    return assets.rows;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch invoices.");
+    throw new Error("Failed to fetch assets.");
   }
 }
 
-export async function fetchInvoicesPages(query: string) {
+export async function fetchAssetsPages(query: string) {
   noStore();
 
   try {
     const count = await sql`SELECT COUNT(*)
-    FROM invoices
-    JOIN customers ON invoices.customer_id = customers.id
+    FROM invoices as assets
+    JOIN customers as designated ON assets.customer_id = designated.id
     WHERE
-      customers.name ILIKE ${`%${query}%`} OR
-      customers.email ILIKE ${`%${query}%`} OR
-      invoices.amount::text ILIKE ${`%${query}%`} OR
-      invoices.date::text ILIKE ${`%${query}%`} OR
-      invoices.status ILIKE ${`%${query}%`}
+      designated.name ILIKE ${`%${query}%`} OR
+      designated.email ILIKE ${`%${query}%`} OR
+      assets.amount::text ILIKE ${`%${query}%`} OR
+      assets.date::text ILIKE ${`%${query}%`} OR
+      assets.status ILIKE ${`%${query}%`}
   `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch total number of invoices.");
+    throw new Error("Failed to fetch total number of assets.");
   }
 }
 
-export async function fetchInvoiceById(id: string) {
+export async function fetchAssetById(id: string) {
   noStore();
 
   try {
-    const data = await sql<InvoiceForm>`
+    const data = await sql<AssetForm>`
       SELECT
-        invoices.id,
-        invoices.customer_id,
-        invoices.amount,
-        invoices.status
-      FROM invoices
-      WHERE invoices.id = ${id};
+        assets.id,
+        assets.customer_id,
+        assets.amount,
+        assets.status
+      FROM invoices as assets
+      WHERE assets.id = ${id};
     `;
 
     const invoice = data.rows.map((invoice) => ({
@@ -180,58 +180,58 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
-export async function fetchCustomers() {
+export async function fetchDesignated() {
   noStore();
 
   try {
-    const data = await sql<CustomerField>`
+    const data = await sql<DesignatedField>`
       SELECT
         id,
         name
-      FROM customers
+      FROM customers as designated
       ORDER BY name ASC
     `;
 
-    const customers = data.rows;
-    return customers;
+    const designated = data.rows;
+    return designated;
   } catch (err) {
     console.error("Database Error:", err);
-    throw new Error("Failed to fetch all customers.");
+    throw new Error("Failed to fetch all designated.");
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export async function fetchFilteredDesignated(query: string) {
   noStore();
 
   try {
-    const data = await sql<CustomersTableType>`
+    const data = await sql<DesignatedTableType>`
 		SELECT
-		  customers.id,
-		  customers.name,
-		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
-		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
+		  designated.id,
+		  designated.name,
+		  designated.email,
+		  designated.image_url,
+		  COUNT(assets.id) AS total_assets,
+		  SUM(CASE WHEN assets.status = 'pending' THEN assets.amount ELSE 0 END) AS total_pending,
+		  SUM(CASE WHEN assets.status = 'paid' THEN assets.amount ELSE 0 END) AS total_paid
+		FROM customers as designated
+		LEFT JOIN invoices as assets ON designated.id = assets.customer_id
 		WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
-		ORDER BY customers.name ASC
+		  designated.name ILIKE ${`%${query}%`} OR
+        designated.email ILIKE ${`%${query}%`}
+		GROUP BY designated.id, designated.name, designated.email, designated.image_url
+		ORDER BY designated.name ASC
 	  `;
 
-    const customers = data.rows.map((customer) => ({
-      ...customer,
-      total_pending: formatCurrency(customer.total_pending),
-      total_paid: formatCurrency(customer.total_paid),
+    const designated = data.rows.map((designated) => ({
+      ...designated,
+      total_pending: formatCurrency(designated.total_pending),
+      total_paid: formatCurrency(designated.total_paid),
     }));
 
-    return customers;
+    return designated;
   } catch (err) {
     console.error("Database Error:", err);
-    throw new Error("Failed to fetch customer table.");
+    throw new Error("Failed to fetch designated table.");
   }
 }
 
@@ -243,4 +243,37 @@ export async function getUser(email: string) {
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
   }
+}
+
+export async function loadSubscriptionPlansSection() {
+  const query: string = `
+    query SubscriptionPlans {
+        subscriptionPlans {
+                name
+                price
+            richDescription {
+                html
+            }
+            color {
+                hex
+                css
+            }
+            planFeatures {
+                description
+                notes
+            }
+        }
+    }`;
+  const response = await fetch(process.env.CMS_API_URL!!, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.CMS_API_KEY}`
+    },
+    body: JSON.stringify({
+      query
+    }),
+  });
+  const result = await response.json();
+  return result;
 }

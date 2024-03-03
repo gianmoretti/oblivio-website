@@ -1,52 +1,94 @@
-import AcmeLogo from "@/app/ui/acme-logo";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import AcmeLogo from "@/app/ui/common/logo/acme-logo";
+import { Section } from "./lib/definitions";
+import { loadSubscriptionPlansSection } from "./lib/data";
+import UISection from "./ui/public-pages/ui-section/uiSection";
 import Link from "next/link";
-import styles from "@/app/ui/home.module.css";
-import { lusitana } from "./ui/fonts";
-import Image from "next/image";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { Plan } from "./lib/model";
+import UISubscriptionPlan from "./ui/public-pages/ui-subscription-plan/uiSubscriptionPlan";
 
-export default function Page() {
+interface Feature {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface FeatureSection extends Section {
+  features: Feature[];
+}
+
+interface SubscriptionPlansSection extends Section {
+  plans: Plan[];
+}
+
+const HomePage: React.FC = async () => {
+  const hero: Section = {
+    title: "Hero title",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    image: {
+      desktop: "/hero-desktop.png",
+      mobile: "/hero-mobile.png",
+      alt: "Screenshots of the dashboard project",
+    },
+    cta: {
+      url: "/login",
+      label: "Log in!",
+    },
+  };
+  const featureSection: FeatureSection = {
+    title: "Feature title",
+    description: "Feature description",
+    features: [],
+    image: {
+      desktop: "/dashboard.png",
+      mobile: "/dashboard.png",
+      alt: "Screenshots of the dashboard project",
+    },
+    cta: {
+      url: "/login",
+      label: "Log in!",
+    },
+    order: "reverse",
+    alignment: "left",
+    backgroundColor: "bg-orange-400",
+  };
+  const { data }: { data: { subscriptionPlans: Plan[] } } =
+    await loadSubscriptionPlansSection();
+  const subscriptionPlansSection: SubscriptionPlansSection = {
+    title: "Subscription Plans title",
+    description: "Subscription Plans description",
+    plans: data.subscriptionPlans,
+    backgroundColor: "bg-white",
+    textColor: "text-blue-600",
+  };
+  const enrollmentInvitationSection: Section = {
+    title: "Enrollement invitation title",
+    description: "Enrollement invitation description",
+    alignment: "left",
+  };
+
   return (
     <main className="flex min-h-screen flex-col p-6">
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
+      <div className="flex h-20 shrink-0 items-end rounded-lg bg-orange-600 p-4 md:h-52">
         <AcmeLogo />
       </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-          <div className={styles.shape} />
-          <p
-            className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}
-          >
-            <strong>Welcome to Oblivio.</strong> This is the example for the{" "}
-            <a href="https://nextjs.org/learn/" className="text-blue-500">
-              Next.js Learn Course
-            </a>
-            , brought to you by Vercel.
-          </p>
-          <Link
-            href="/login"
-            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-          >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
-          </Link>
+      <UISection baseSection={hero} />
+      <UISection baseSection={featureSection} />
+      <UISection baseSection={subscriptionPlansSection}>
+        <div
+          className={
+            "flex items-center justify-center gap-6 rounded-lg px-6 md:px-10 md:flex-row sm:flex-col"
+          }
+        >
+          {subscriptionPlansSection.plans.map((plan) => (
+            <UISubscriptionPlan plan={plan} />
+          ))}
         </div>
-        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          <Image
-            src="/hero-desktop.png"
-            width={1000}
-            height={760}
-            className="hidden md:block"
-            alt="Screenshots of the dashboard project showing desktop version"
-          />
-          <Image
-            src="/hero-mobile.png"
-            width={560}
-            height={620}
-            className="block md:hidden"
-            alt="Screenshots of the dashboard project showing mobile version"
-          />
-        </div>
-      </div>
+      </UISection>
+      <UISection baseSection={enrollmentInvitationSection} />
     </main>
   );
-}
+};
+
+export default HomePage;

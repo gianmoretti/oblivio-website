@@ -8,7 +8,7 @@ import {
   GlobeAltIcon,
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import { Button } from "@/app/ui/button";
+import { Button } from "@/app/ui/common/button/button";
 import { useFormState, useFormStatus } from "react-dom";
 import {
   authenticateWithCredentials,
