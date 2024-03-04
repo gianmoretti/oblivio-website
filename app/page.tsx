@@ -39,7 +39,9 @@ const HomePage: React.FC = async () => {
     },
     cta: {
       url: "/login",
-      label: "Log in!",
+      label: "Login",
+      backgroundColor: "bg-white",
+      backgroundColorOnHover: "hover:bg-orange-400",
     },
   };
   const reasonsSection: Section = {
@@ -142,9 +144,12 @@ const HomePage: React.FC = async () => {
             </Link>
           </li>
           <li>
-            <Button className="text-white bg-transparent border border-white">
+            <Link
+              href="/login"
+              className="flex h-10 px-4 items-center rounded-lg border hover:bg-blue-400 text-sm"
+            >
               Login
-            </Button>
+            </Link>
           </li>
           <li>
             <Button className="ml-2">Registrati</Button>

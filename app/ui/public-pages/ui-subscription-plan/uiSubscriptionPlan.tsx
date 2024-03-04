@@ -38,8 +38,10 @@ const UISubscriptionPlan: React.FC<UISubscriptionPlanProps> = ({ plan }) => {
       </ul>
       <Link
         href={""}
-        className={`flex items-center gap-5 rounded-lg px-6 py-3 text-sm text-white font-medium transition-colors md:text-base`}
-        style={{ backgroundColor: plan.color.hex }}
+        className={`flex items-center gap-5 rounded-lg px-6 py-3 text-sm text-white font-medium transition-colors md:text-base 
+        ${plan.color.hex === "#4635f3" ? "bg-blue-400" : "bg-orange-400"} 
+        ${plan.color.hex === "#4635f3" ? "hover:bg-blue-600" : "hover:bg-orange-600"} 
+        `}
       >
         <span>Scegli</span> <ArrowRightIcon className="w-5 md:w-6" />
       </Link>

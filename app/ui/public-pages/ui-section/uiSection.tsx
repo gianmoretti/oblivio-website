@@ -34,7 +34,7 @@ const UISection: React.FC<UISectionProps> = ({ baseSection, children }) => {
           {cta && (
             <Link
               href={cta.url}
-              className={`flex items-center gap-5 ${alignment === "center" ? "" : "self-start"} rounded-lg ${cta.backgroundColor ?? "bg-white"}  px-6 py-3 text-sm font-medium ${cta.textColor ?? "text-blue-400"} transition-colors hover:${cta.backgroundColor ?? "bg-gray-300"} md:text-base`}
+              className={`flex items-center gap-5 ${alignment === "center" ? "" : "self-start"} rounded-lg ${cta.backgroundColor ?? "bg-white"}  px-6 py-3 text-sm font-medium ${cta.textColor ?? "text-blue-400"} transition-colors ${cta.backgroundColorOnHover ?? "hover:bg-gray-300"} md:text-base`}
             >
               <span>{cta.label}</span> <ArrowRightIcon className="w-5 md:w-6" />
             </Link>
