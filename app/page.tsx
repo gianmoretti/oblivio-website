@@ -1,4 +1,3 @@
-import AcmeLogo from "@/app/ui/common/logo/acme-logo";
 import { Section } from "./lib/definitions";
 import { loadSubscriptionPlansSection } from "./lib/data";
 import UISection from "./ui/public-pages/ui-section/uiSection";
@@ -11,7 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/common/card/card";
-import { Button } from "./ui/common/button/button";
+import React from "react";
+import Menu from "./ui/public-pages/menu/menu";
 
 interface Feature {
   icon?: string;
@@ -111,51 +111,7 @@ const HomePage: React.FC = async () => {
 
   return (
     <main className="flex min-h-screen flex-col">
-      <nav className="bg-orange-600 text-white p-4">
-        <ul className="flex justify-between mx-auto items-center">
-          <li>
-            <Link className="block px-4 py-2" href="#">
-              <AcmeLogo />
-            </Link>
-          </li>
-          <li>
-            <Link className="block px-4 py-2" href="#">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link className="block px-4 py-2" href="#">
-              Lo sapevi che...
-            </Link>
-          </li>
-          <li>
-            <Link className="block px-4 py-2" href="#">
-              Prezzo
-            </Link>
-          </li>
-          <li>
-            <Link className="block px-4 py-2" href="#">
-              Chi siamo
-            </Link>
-          </li>
-          <li>
-            <Link className="block px-4 py-2" href="#">
-              Contatti
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/login"
-              className="flex h-10 px-4 items-center rounded-lg border hover:bg-blue-400 text-sm"
-            >
-              Login
-            </Link>
-          </li>
-          <li>
-            <Button className="ml-2">Registrati</Button>
-          </li>
-        </ul>
-      </nav>
+      <Menu />
       <UISection baseSection={hero} />
       <UISection baseSection={reasonsSection} />
       <UISection baseSection={processSection} />
