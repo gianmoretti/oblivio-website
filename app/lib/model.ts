@@ -22,6 +22,14 @@ export enum AssetType {
     OTHER = "OTHER",
 }
 
+export enum CategoryType {
+    PROPERTY = "PROPERTY",
+    INSURANCE = "INSURANCE",
+    FINANCIAL = "FINANCIAL",
+    CRYPTO = "CRYPTO",
+    SECRET = "SECRET",
+}
+
 export enum LicenseType {
     BASIC = "BASIC",
     STANDARD = "STANDARD",
@@ -97,6 +105,7 @@ export interface Asset {
     id: string,
     designatedId: string,
     type: AssetType,
+    category: CategoryType,
     description: string,
     amount: number,
     date: string,

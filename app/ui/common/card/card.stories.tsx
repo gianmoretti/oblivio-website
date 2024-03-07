@@ -7,6 +7,7 @@ import {
   CardDescription,
   CardContent,
 } from "./card";
+import Badge from "../badge/badge";
 
 const meta = {
   title: "Oblivio/Card",
@@ -51,6 +52,31 @@ WithCustomStyles.args = {
         <p>Custom content goes here.</p>
       </CardContent>
       <CardFooter className="bg-yellow-300">Custom Footer</CardFooter>
+    </>
+  ),
+};
+
+export const WithBadge = Template.bind({});
+WithBadge.args = {
+  className: "bg-blue-200",
+  children: (
+    <>
+      <CardHeader>
+        <CardTitle className="text-red-500">Badge Card Title</CardTitle>
+        <CardDescription className="text-green-500">
+          A Card with Badges
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>Content goes here.</p>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <div>€ 100</div>
+        <div className="flex space-x-1">
+          <Badge>D</Badge>
+          <Badge>M</Badge>
+        </div>
+      </CardFooter>
     </>
   ),
 };
