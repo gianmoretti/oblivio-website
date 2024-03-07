@@ -1,6 +1,6 @@
 import Link from "next/link";
 import NavLinks from "@/app/ui/dashboard/nav-links";
-import AcmeLogo from "@/app/ui/common/logo/acme-logo";
+import OblivioLogo from "@/app/ui/common/logo/oblivio-logo";
 import { PowerIcon } from "@heroicons/react/24/outline";
 import { auth, signOut } from "@/auth";
 import Image from "next/image";
@@ -16,7 +16,7 @@ export default async function SideNav() {
         href="/"
       >
         <div className="w-32 text-white md:w-40">
-          <AcmeLogo />
+          <OblivioLogo />
         </div>
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">

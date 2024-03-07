@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "../../common/button/button";
-import AcmeLogo from "../../common/logo/acme-logo";
+import OblivioLogo from "../../common/logo/oblivio-logo";
 import React from "react";
 
 const Menu: React.FC = () => {
@@ -17,7 +17,7 @@ const Menu: React.FC = () => {
     <nav className="bg-orange-600 text-white p-4">
       <div className="flex justify-between items-center">
         <Link className="px-4 py-2" href="#">
-          <AcmeLogo />
+          <OblivioLogo />
         </Link>
         <ul>
           <li className="md:hidden">
