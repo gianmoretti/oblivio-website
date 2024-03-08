@@ -13,5 +13,5 @@ const BitcoinIcon = React.forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   ),
 );
 
-BitcoinIcon.displayName = "MyCustomIcon";
+BitcoinIcon.displayName = "BitcoinIcon";
 export default BitcoinIcon;

@@ -2,14 +2,13 @@ import { CategoryType, Designated } from "../../../../app/lib/model";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardFooter,
   CardTitle,
 } from "../../common/card/card";
 import Badge from "../../common/badge/badge";
 import Category from "../../common/category/category";
-import { CalendarDaysIcon, CalendarIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon } from "@heroicons/react/24/outline";
 import { computeInitials } from "@/app/lib/utils";
 
 interface AssetCardProps {

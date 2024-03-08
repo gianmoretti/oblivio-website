@@ -5,6 +5,7 @@ export enum MessageStatus {
 }
 
 export enum VerificationStatus {
+    SCHEDULED = "SCHEDULED",
     PENDING = "PENDING",
     VERIFIED = "VERIFIED",
     REJECTED = "REJECTED",
@@ -56,6 +57,13 @@ export enum PaymentType {
     CREDIT = "CREDIT",
 }
 
+export enum MeansType {
+    EMAIL = "EMAIL",
+    WHATSAPP = "WHATSAPP",
+    PHONE_CALL = "PHONE_CALL",
+    LIVE_MEET = "LIVE_MEET",
+}
+
 export interface User {
     //id: number,
     id: string,
@@ -80,13 +88,14 @@ export interface Message {
 
 export interface Verification {
     id: number,
-    timestamp: Date,
+    timestamp: string,
     status: VerificationStatus,
+    means?: MeansType,
 }
 
 export interface Notification {
     id: number,
-    timestamp: Date,
+    timestamp: string,
     status: NotificationStatus,
 }
 
