@@ -13,9 +13,7 @@ export default async function DesignatedTable({
 }) {
   return (
     <div className="w-full">
-      <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
-        Designated
-      </h1>
+      <h1 className="mb-8 text-xl md:text-2xl">Designated</h1>
       <Search placeholder="Search designated..." />
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
