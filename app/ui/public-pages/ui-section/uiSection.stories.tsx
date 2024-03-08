@@ -5,9 +5,6 @@ import UISection from "./uiSection";
 const meta = {
   title: "Oblivio/UISection",
   component: UISection,
-  parameters: {
-    layout: "centered",
-  },
   tags: ["autodocs"],
   argTypes: {
     baseSection: {

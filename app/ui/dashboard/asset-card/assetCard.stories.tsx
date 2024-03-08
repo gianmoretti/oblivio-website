@@ -5,9 +5,6 @@ import { CategoryType } from "@/app/lib/model";
 const meta = {
   title: "Oblivio/AssetCard",
   component: AssetCard,
-  parameters: {
-    layout: "centered",
-  },
   argTypes: {
     category: {
       options: Object.values(CategoryType),
@@ -34,12 +31,14 @@ export const Default: Story = {
         firstName: "First Name",
         lastName: "Last Name",
         email: "an email",
+        updatedAt: "31-12-2023",
       },
       {
         id: "456",
         firstName: "Name",
         lastName: "Last",
         email: "an email",
+        updatedAt: "31-12-2023",
       },
     ],
   },

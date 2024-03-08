@@ -102,6 +102,7 @@ export interface Designated {
     phoneNumber?: string,
     fiscalCode?: string,
     imageUrl?: string,
+    updatedAt: string,
 }
 
 export interface Asset {
@@ -110,6 +111,7 @@ export interface Asset {
     designatedList: Designated[],
     description: string,
     documents: AssetDocument[],
+    updatedAt: string,
 }
 
 export interface AssetDocument {

@@ -12,9 +12,6 @@ import Badge from "../badge/badge";
 const meta = {
   title: "Oblivio/Card",
   component: Card,
-  parameters: {
-    layout: "centered",
-  },
   tags: ["autodocs"],
 } satisfies Meta<typeof Card>;
 

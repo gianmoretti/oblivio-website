@@ -4,9 +4,6 @@ import DesignatedCard from "./designatedCard";
 const meta = {
   title: "Oblivio/DesignatedCard",
   component: DesignatedCard,
-  parameters: {
-    layout: "centered",
-  },
   tags: ["autodocs"],
 } satisfies Meta<typeof DesignatedCard>;
 export default meta;
