@@ -67,3 +67,7 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+export function computeInitials(firstName: string, lastName: string): string {
+  return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
+}

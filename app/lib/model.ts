@@ -16,10 +16,15 @@ export enum NotificationStatus {
     READ = "READ",
 }
 
-export enum AssetType {
-    IMAGE = "IMAGE",
-    DOCUMENT = "DOCUMENT",
-    OTHER = "OTHER",
+// We can add new file ext when they need
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
+export enum FileMimeType {
+    JPEG = 'image/jpeg',
+    PNG = 'image/png',
+    PDF = 'application/pdf',
+    WEBP = 'image/webp',
+    DOC = 'application/msword',
+    DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 }
 
 export enum CategoryType {
@@ -89,27 +94,31 @@ export interface Designated {
     //id: number,
     id: string,
     email: string,
-    name: string,
     firstName: string,
     lastName: string,
-    birthDate?: Date,
+    birthDate?: string,
     birthPlace?: string,
     residence?: string,
     phoneNumber?: string,
     fiscalCode?: string,
-    image_url: string,
+    imageUrl?: string,
 }
 
 export interface Asset {
-    //id: number,
     id: string,
-    designatedId: string,
-    type: AssetType,
     category: CategoryType,
+    designatedList: Designated[],
     description: string,
-    amount: number,
-    date: string,
-    status: "pending" | "paid",
+    documents: AssetDocument[],
+}
+
+export interface AssetDocument {
+    id: string,
+    mimeType: FileMimeType,
+    name: string,
+    assetId: Asset['id'],
+    filename: string,
+    url?: string,
 }
 
 export interface Subscription {

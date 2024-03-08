@@ -8,6 +8,7 @@ import {
   KeyIcon,
 } from "@heroicons/react/24/outline";
 import { twMerge } from "tailwind-merge";
+import BitcoinIcon from "../customIcons/bitcoinIcon";
 
 export interface CategoryProps extends React.HTMLAttributes<HTMLDivElement> {
   type: CategoryType;
@@ -19,7 +20,7 @@ const mapperCategoryIcon: Record<
     React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>
   >
 > = {
-  CRYPTO: CurrencyDollarIcon,
+  CRYPTO: BitcoinIcon,
   FINANCIAL: BanknotesIcon,
   INSURANCE: BuildingLibraryIcon,
   PROPERTY: HomeIcon,
