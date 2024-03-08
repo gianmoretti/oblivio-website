@@ -67,7 +67,7 @@ const DesignatedCard: React.FC<DesignatedCardProps> = ({
         )}
         {fiscalCode && (
           <div>
-            <strong>codice fiascale:</strong> {fiscalCode}
+            <strong>codice fiscale:</strong> {fiscalCode}
           </div>
         )}
         {phoneNumber && (
