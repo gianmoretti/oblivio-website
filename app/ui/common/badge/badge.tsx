@@ -1,9 +1,15 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  backgroundColor?: string;
+}
 
-const Badge: React.FC<BadgeProps> = ({ className, ...props }: BadgeProps) => (
+const Badge: React.FC<BadgeProps> = ({
+  className,
+  backgroundColor,
+  ...props
+}: BadgeProps) => (
   <div
     className={twMerge(
       clsx(
@@ -13,6 +19,7 @@ const Badge: React.FC<BadgeProps> = ({ className, ...props }: BadgeProps) => (
       ),
       className,
     )}
+    style={{ backgroundColor }}
     {...props}
   />
 );

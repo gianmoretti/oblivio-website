@@ -20,6 +20,7 @@ export const Default: Story = {
     residence: "via roma 1, Roma",
     phoneNumber: "+393401234567",
     fiscalCode: "JHNDOE78P04L400P",
+    badgeColor: "#bd5e73",
     imageUrl:
       "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80",
     updatedAt: "01-01-2024",
@@ -36,6 +37,7 @@ export const WithoutImage: Story = {
     residence: "via roma 1, Roma",
     phoneNumber: "+393401234567",
     fiscalCode: "JHNDOE78P04L400P",
+    badgeColor: "#fcba03",
     updatedAt: "01-01-2024",
   },
 };

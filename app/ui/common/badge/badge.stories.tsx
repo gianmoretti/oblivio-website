@@ -13,6 +13,11 @@ const meta = {
         type: "text",
       },
     },
+    backgroundColor: {
+      control: {
+        type: "color",
+      },
+    },
     children: {
       control: {
         type: "text",
@@ -33,5 +38,11 @@ Default.args = {
 export const WithCustomClass = Template.bind({});
 WithCustomClass.args = {
   children: <>LT</>,
-  className: " bg-red-400 text-lg",
+  className: "text-lg",
+};
+
+export const WithBackgroundColor = Template.bind({});
+WithBackgroundColor.args = {
+  children: <>LT</>,
+  backgroundColor: "#35be16",
 };

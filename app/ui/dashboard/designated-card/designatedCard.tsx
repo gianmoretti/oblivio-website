@@ -13,6 +13,8 @@ import {
   CardTitle,
 } from "../../common/card/card";
 import { CalendarIcon } from "@heroicons/react/24/outline";
+import Badge from "../../common/badge/badge";
+import clsx from "clsx";
 
 interface DesignatedCardProps {
   email: string;
@@ -23,6 +25,7 @@ interface DesignatedCardProps {
   residence?: string;
   phoneNumber?: string;
   fiscalCode?: string;
+  badgeColor?: string;
   imageUrl?: string;
   updatedAt: string;
 }
@@ -36,6 +39,7 @@ const DesignatedCard: React.FC<DesignatedCardProps> = ({
   residence,
   phoneNumber,
   fiscalCode,
+  badgeColor,
   imageUrl,
   updatedAt,
 }) => {
@@ -80,6 +84,7 @@ const DesignatedCard: React.FC<DesignatedCardProps> = ({
         <div className="flex space-x-1 items-center">
           <CalendarIcon className="w-5 h-5"></CalendarIcon> {updatedAt}
         </div>
+        <Badge backgroundColor={badgeColor}>{designatedInitials}</Badge>
       </CardFooter>
     </Card>
   );

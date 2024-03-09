@@ -65,7 +65,6 @@ export enum MeansType {
 }
 
 export interface User {
-    //id: number,
     id: string,
     email: string,
     password: string,
@@ -100,7 +99,6 @@ export interface Notification {
 }
 
 export interface Designated {
-    //id: number,
     id: string,
     email: string,
     firstName: string,
@@ -110,6 +108,7 @@ export interface Designated {
     residence?: string,
     phoneNumber?: string,
     fiscalCode?: string,
+    color?: string,
     imageUrl?: string,
     updatedAt: string,
 }
