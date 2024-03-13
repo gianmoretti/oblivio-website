@@ -24,7 +24,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { computeInitials } from "@/app/lib/utils";
 import clsx from "clsx";
-import WhatsappIcon from "../../common/customIcons/whatsappIcon";
+import WhatsappIcon from "../../common/custom-icons/whatsappIcon";
 import CheckStatusBadge from "../../common/check-status-badge/checkStatusBadge";
 
 const mapperCheckMeansIcon: Record<

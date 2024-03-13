@@ -115,9 +115,10 @@ export interface Designated {
 
 export interface Asset {
     id: string,
+    name: string,
+    description: string,
     category: CategoryType,
     designatedList: Designated[],
-    description: string,
     documents: AssetDocument[],
     updatedAt: string,
 }

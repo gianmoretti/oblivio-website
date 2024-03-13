@@ -8,7 +8,7 @@ import {
   KeyIcon,
 } from "@heroicons/react/24/outline";
 import { twMerge } from "tailwind-merge";
-import BitcoinIcon from "../customIcons/bitcoinIcon";
+import BitcoinIcon from "../custom-icons/bitcoinIcon";
 
 export interface CategoryProps extends React.HTMLAttributes<HTMLDivElement> {
   type: CategoryType;

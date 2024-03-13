@@ -29,6 +29,16 @@ export function CardsSkeleton() {
   );
 }
 
+export function SummaryCardsSkeleton() {
+  return (
+    <>
+      <CardSkeleton />
+      <CardSkeleton />
+      <CardSkeleton />
+    </>
+  );
+}
+
 export function RevenueChartSkeleton() {
   return (
     <div className={`${shimmer} relative w-full overflow-hidden md:col-span-4`}>
@@ -76,6 +86,36 @@ export function LatestAssetsSkeleton() {
             <div className="h-5 w-5 rounded-full bg-gray-200" />
             <div className="ml-2 h-4 w-20 rounded-md bg-gray-200" />
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function AllAssetsSkeleton() {
+  return (
+    <div className="flex w-full flex-col col-span-2 md:col-span-8">
+      <h2 className="mb-4 text-lg">All Assets</h2>
+      <div className="flex flex-col justify-center md:justify-between rounded-xl bg-gray-50 p-4">
+        <div className="bg-white p-6 flex flex-wrap justify-center md:justify-between gap-x-2 gap-y-8">
+          <AssetSkeleton />
+          <AssetSkeleton />
+          <AssetSkeleton />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function AllDesignatedSkeleton() {
+  return (
+    <div className="flex w-full flex-col col-span-2 md:col-span-8">
+      <h2 className="mb-4 text-lg">All Designated</h2>
+      <div className="flex flex-col justify-center md:justify-between rounded-xl bg-gray-50 p-4">
+        <div className="bg-white p-6 flex flex-wrap justify-center md:justify-between gap-x-2 gap-y-8">
+          <AssetSkeleton />
+          <AssetSkeleton />
+          <AssetSkeleton />
         </div>
       </div>
     </div>

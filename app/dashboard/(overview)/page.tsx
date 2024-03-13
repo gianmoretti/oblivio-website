@@ -1,29 +1,31 @@
-import CardWrapper from "@/app/ui/dashboard/cards";
-import RevenueChart from "@/app/ui/dashboard/revenue-chart";
-import LatestAssets from "@/app/ui/dashboard/latest-assets";
-import { lusitana } from "@/app/ui/fonts";
 import { Suspense } from "react";
 import {
-  RevenueChartSkeleton,
-  LatestAssetsSkeleton,
   CardsSkeleton,
+  AllAssetsSkeleton,
+  AllDesignatedSkeleton,
+  SummaryCardsSkeleton,
 } from "@/app/ui/common/skeletons/skeletons";
+import AllAssets from "@/app/ui/dashboard/all-assets";
+import AllDesignated from "@/app/ui/dashboard/all-designated";
+import SummaryCardsWrapper from "@/app/ui/dashboard/summary-cards";
 
 export default async function Page() {
   return (
     <main>
       <h1 className="mb-4 text-xl md:text-2xl">Dashboard</h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Suspense fallback={<CardsSkeleton />}>
-          <CardWrapper />
+        <Suspense fallback={<SummaryCardsSkeleton />}>
+          <SummaryCardsWrapper />
         </Suspense>
       </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <Suspense fallback={<RevenueChartSkeleton />}>
-          <RevenueChart />
+      <div className="mt-6 grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-8">
+        <Suspense fallback={<AllAssetsSkeleton />}>
+          <AllAssets />
         </Suspense>
-        <Suspense fallback={<LatestAssetsSkeleton />}>
-          <LatestAssets />
+      </div>
+      <div className="mt-6 grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-8">
+        <Suspense fallback={<AllDesignatedSkeleton />}>
+          <AllDesignated />
         </Suspense>
       </div>
     </main>
