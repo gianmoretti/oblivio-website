@@ -245,7 +245,23 @@ export async function getUser(email: string) {
   }
 }
 
-export async function loadSubscriptionPlansSection() {
+export async function loadSubscriptionPlanSection() {
+  const query: string = `
+    query SubscriptionPlanSection {
+      section(where: {
+        type: SubscriptionPlan
+      }) {
+        title
+        richDescription{
+          html
+          text
+        }
+      }
+    }`;
+  return execGraphQLQuery(query);
+}
+
+export async function loadSubscriptionPlans() {
   const query: string = `
     query SubscriptionPlans {
         subscriptionPlans {
@@ -264,6 +280,89 @@ export async function loadSubscriptionPlansSection() {
             }
         }
     }`;
+  return execGraphQLQuery(query);
+}
+
+export async function loadProcessSection() {
+  const query: string = `
+    query ProcessSection {
+      section(where: {
+        type: Process
+      }) {
+        title
+        richDescription{
+          html
+          text
+        }
+        desktopImage {
+          url
+        }
+        mobileImage{
+          url
+        }
+      }
+    }`;
+  return execGraphQLQuery(query);
+}
+
+export async function loadHeroSection() {
+  const query: string = `
+    query HeroSection {
+      section(where: {
+        type: Hero
+      }) {
+        title
+        description
+        desktopImage{
+          url
+        }
+        mobileImage{
+          url
+        }
+      }
+    }`;
+  return execGraphQLQuery(query);
+}
+
+export async function loadReasonSection() {
+  const query: string = `
+    query ReasonSection {
+      section(where: {
+        type: Reason
+      }) {
+        title
+        description
+      }
+    }`;
+  return execGraphQLQuery(query);
+}
+
+export async function loadEnrollmentSection() {
+  const query: string = `
+    query EnrollmentSection {
+      section(where: {
+        type: Enrollment
+      }) {
+        title
+        description
+      }
+    }`;
+  return execGraphQLQuery(query);
+}
+
+export async function loadAllFeaturesSection() {
+  const query: string = `
+    query AllFeaturesSection {
+      productFeatures{
+          title
+          description
+        }
+      }`;
+  ;
+  return execGraphQLQuery(query);
+}
+
+async function execGraphQLQuery(query: string) {
   const response = await fetch(process.env.CMS_API_URL!!, {
     method: 'POST',
     headers: {

@@ -1,8 +1,7 @@
 import { Section } from "./lib/definitions";
-import { loadSubscriptionPlansSection } from "./lib/data";
+import { loadAllFeaturesSection, loadEnrollmentSection, loadHeroSection, loadProcessSection, loadReasonSection, loadSubscriptionPlanSection, loadSubscriptionPlans } from "./lib/data";
 import UISection from "./ui/public-pages/ui-section/uiSection";
 import Link from "next/link";
-import { Plan } from "./lib/model";
 import UISubscriptionPlan from "./ui/public-pages/ui-subscription-plan/uiSubscriptionPlan";
 import {
   Card,
@@ -12,6 +11,7 @@ import {
 } from "./ui/common/card/card";
 import React from "react";
 import Menu from "./ui/public-pages/menu/menu";
+import { GraphQLSection, Plan } from "./lib/graphql-models";
 
 interface Feature {
   icon?: string;
@@ -28,13 +28,13 @@ interface SubscriptionPlansSection extends Section {
 }
 
 const HomePage: React.FC = async () => {
+  const { data: heroData }: { data: { section: GraphQLSection }  } = await loadHeroSection();
   const hero: Section = {
-    title: "Hero title",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    title: heroData.section.title,
+    description: heroData.section.description,
     image: {
-      desktop: "/hero-desktop.png",
-      mobile: "/hero-mobile.png",
+      desktop: heroData.section.desktopImage?.url ?? "/hero-desktop.png",
+      mobile: heroData.section.mobileImage?.url ?? "/hero-mobile.png",
       alt: "Screenshots of the dashboard project",
     },
     cta: {
@@ -44,68 +44,51 @@ const HomePage: React.FC = async () => {
       backgroundColorOnHover: "hover:bg-orange-400",
     },
   };
+  const { data: reasonsData }: { data: { section: GraphQLSection }  } = await loadReasonSection();
   const reasonsSection: Section = {
-    title: "Reasons title",
-    description: "Reasons description",
+    title: reasonsData.section.title,
+    description: reasonsData.section.description,
     backgroundColor: "bg-white",
     textColor: "text-orange-600",
   };
+
+  const { data: processData }: { data: { section: GraphQLSection }  } = await loadProcessSection();
   const processSection: Section = {
-    title: "Product title",
-    description: "Product description",
+    title: processData.section.title,
+    description: processData.section.richDescription.html,
     image: {
-      desktop: "/dashboard.png",
-      mobile: "/dashboard.png",
+      desktop: processData.section.desktopImage?.url ?? "/dashboard.png",
+      mobile: processData.section.mobileImage?.url ??"/dashboard.png",
       alt: "Screenshots of the dashboard project",
     },
     order: "reverse",
     alignment: "left",
     backgroundColor: "bg-orange-400",
   };
+
+  const { data: featuresData }: { data: { productFeatures: Feature[] } } = await loadAllFeaturesSection();
   const featureSection: FeatureSection = {
-    title: "Feature title",
-    description: "Feature description",
-    features: [
-      {
-        title: "Feature title",
-        description: "Feature description",
-      },
-      {
-        title: "Feature title",
-        description: "Feature description",
-      },
-      {
-        title: "Feature title",
-        description: "Feature description",
-      },
-      {
-        title: "Feature title",
-        description: "Feature description",
-      },
-      {
-        title: "Feature title",
-        description: "Feature description",
-      },
-      {
-        title: "Feature title",
-        description: "Feature description",
-      },
-    ],
+    title: "I passi chiave",
+    description: "Qui in elenco gli step chiave dell'uso del servizio Oblivio",
+    features: featuresData.productFeatures,
     alignment: "center",
     backgroundColor: "bg-blue-400",
   };
-  const { data }: { data: { subscriptionPlans: Plan[] } } =
-    await loadSubscriptionPlansSection();
+
+  const { data: planData }: { data: { section: GraphQLSection } } = await loadSubscriptionPlanSection();
+  const { data: plansData }: { data: { subscriptionPlans: Plan[] } } = await loadSubscriptionPlans();
   const subscriptionPlansSection: SubscriptionPlansSection = {
-    title: "Subscription Plans title",
-    description: "Subscription Plans description",
-    plans: data.subscriptionPlans,
+    title: planData.section.title,
+    description: planData.section.richDescription.html,
+    plans: plansData.subscriptionPlans,
     backgroundColor: "bg-white",
     textColor: "text-blue-600",
   };
+
+  const { data: enrollmentData }: { data: { section: GraphQLSection } } = await loadEnrollmentSection();
   const enrollmentInvitationSection: Section = {
-    title: "Enrollement invitation title",
-    description: "Enrollement invitation description",
+    title: enrollmentData.section.title,
+    description: enrollmentData.section.description,
     alignment: "left",
   };
 

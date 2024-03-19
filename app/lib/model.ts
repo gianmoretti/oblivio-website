@@ -148,15 +148,3 @@ export interface Payment {
     amount: number,
     channel: string,
 }
-
-export interface PlanFeature {
-    description: string;
-    notes?: string;
-}
-
-export interface Plan {
-    name: string;
-    price: string;
-    color: { hex: string };
-    planFeatures: PlanFeature[];
-}

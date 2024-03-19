@@ -21,6 +21,11 @@ export interface Section {
   }
 }
 
+export interface Feature {
+  title: string,
+  description: string,
+}
+
 export type Revenue = {
   month: string,
   revenue: number,

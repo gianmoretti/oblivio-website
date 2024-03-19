@@ -30,7 +30,9 @@ const UISection: React.FC<UISectionProps> = ({ baseSection, children }) => {
           <div className={`text-xl ${textColor} md:text-3xl md:leading-normal`}>
             <h1 className="text-4xl font-bold">{title}</h1>
           </div>
-          <p className={`${textColor} my-4 md:leading-normal`}>{description}</p>
+          <p className={`${textColor} my-4 md:leading-normal`}>
+            <div className="content" dangerouslySetInnerHTML={{__html: description}}></div>
+          </p>
           {cta && (
             <Link
               href={cta.url}
