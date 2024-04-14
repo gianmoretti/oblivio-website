@@ -3,7 +3,6 @@ import Breadcrumbs from "@/app/ui/designated/breadcrumbs";
 import Form from "@/app/ui/designated/create-form";
 import React from "react";
 const AssetCreatePage: React.FC = async () => {
-  const designated = await fetchDesignated();
   return (
     <main>
       <Breadcrumbs
@@ -16,7 +15,7 @@ const AssetCreatePage: React.FC = async () => {
           },
         ]}
       />
-      <Form designated={designated} />
+      <Form />
     </main>
   );
 };

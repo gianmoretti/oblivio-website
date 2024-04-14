@@ -67,6 +67,7 @@ export async function createDesignated(prevState: State, formData: FormData) {
     };
     console.log(rawFormData);
 
+    console.log("PREV_STATE---->", prevState);
     const validatedFields = DesignatedToSave.safeParse(rawFormData);
     if (!validatedFields.success) {
         return {
@@ -77,7 +78,17 @@ export async function createDesignated(prevState: State, formData: FormData) {
 
     const { firstName, lastName, fiscalCode, email, birthPlace, birthDate, residence, phoneNumber } = validatedFields.data;
     try {
-        //TODO Add call to fetch for creation
+        const response = await execBackendQuery("POST", 'designateds', {
+            first_name: firstName,
+            last_name: lastName,
+            fiscal_code: fiscalCode,
+            email,
+            birth_date: birthDate.toISOString().substring(0, 10),
+            birth_place: birthPlace,
+            residence,
+            phone_number: phoneNumber,
+        });
+        console.log("RESPONSE ---> ", response);
     } catch (error) {
         return {
             message: 'Database Error: Failed to create Designated.',
@@ -130,7 +141,9 @@ export async function editDesignated(id: string, _prevState: State, formData: Fo
 
 export async function deleteDesignated(id: string) {
     try {
-        await sql`DELETE FROM invoices WHERE id = ${id}`;
+        console.log("DELETE IN PROGRESS");
+        const response = await execBackendQuery("DELETE", `designateds/${id}`, undefined);
+        console.log("RESPONSE ---> ", response);
     } catch (error) {
         console.log(error);
         return { message: 'Database Error: Failed to Delete Designated.' };
@@ -170,18 +183,35 @@ export async function authenticateWithGoogle(
     }
 }
 
+function removeUndefinedFields(obj: Record<string, any>): Record<string, any> {
+    return Object.fromEntries(
+        Object.entries(obj)
+            .filter(([_, value]) => value !== undefined)
+    );
+}
+
 async function execBackendQuery(method: string, apiPath: string, body?: any) {
     console.log("method:", method);
     const fullPath = `${process.env.BACKEND_API_URL!!}/api/${apiPath}`;
     console.log("fullPath:", fullPath);
     console.log("body:", body);
-    const response = await fetch(fullPath, {
+
+    const initRequest = {
         method,
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
-    });
-    const result = await response.json();
-    return result;
+        body: body ? JSON.stringify(body) : undefined,
+    };
+    console.log("initResponse:", initRequest);
+    const normalizedRequest = removeUndefinedFields(initRequest);
+    console.log("normalizedRequest:", normalizedRequest);
+    const response = await fetch(fullPath, normalizedRequest);
+    console.log(response);
+    if (method !== 'DELETE') {
+        const result = await response.json();
+        return result;
+    } else {
+        return response.status;
+    }
 }

@@ -2,18 +2,13 @@
 
 import Link from "next/link";
 import { Button } from "@/app/ui/common/button/button";
-import { editDesignated } from "@/app/lib/actions";
+import { createDesignated } from "@/app/lib/actions";
 import { useFormState } from "react-dom";
-import { Designated } from "@/app/lib/model";
 
-export default function EditDesignatedForm({
-  designated,
-}: {
-  designated: Designated,
-}) {
+export default function CreateDesignatedForm() {
   const initialState = { message: null, errors: {} };
-  const editDesignatedWithId = editDesignated.bind(null, designated.id);
-  const [state, dispatch] = useFormState(editDesignatedWithId, initialState);
+  const createDesignatedWithId = createDesignated.bind(null);
+  const [state, dispatch] = useFormState(createDesignatedWithId, initialState);
 
   return (
     <form action={dispatch}>
@@ -27,7 +22,6 @@ export default function EditDesignatedForm({
               <input
                 id="firstName"
                 name="firstName"
-                defaultValue={designated.firstName}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="firstName-error"
               />
@@ -52,7 +46,6 @@ export default function EditDesignatedForm({
               <input
                 id="lastName"
                 name="lastName"
-                defaultValue={designated.lastName}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="lastName-error"
               />
@@ -77,7 +70,6 @@ export default function EditDesignatedForm({
               <input
                 id="email"
                 name="email"
-                defaultValue={designated.email}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="email-error"
               />
@@ -102,7 +94,6 @@ export default function EditDesignatedForm({
               <input
                 id="fiscalCode"
                 name="fiscalCode"
-                defaultValue={designated.fiscalCode}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="fiscalCode-error"
               />
@@ -127,7 +118,6 @@ export default function EditDesignatedForm({
               <input
                 id="birthPlace"
                 name="birthPlace"
-                defaultValue={designated.birthPlace}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="birthPlace-error"
               />
@@ -153,7 +143,6 @@ export default function EditDesignatedForm({
                 id="birthDate"
                 name="birthDate"
                 type="date"
-                defaultValue={designated.birthDate}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="birthDate-error"
               />
@@ -178,7 +167,6 @@ export default function EditDesignatedForm({
               <input
                 id="residence"
                 name="residence"
-                defaultValue={designated.residence}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="residence-error"
               />
@@ -203,7 +191,6 @@ export default function EditDesignatedForm({
               <input
                 id="phoneNumber"
                 name="phoneNumber"
-                defaultValue={designated.phoneNumber}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="residence-error"
               />
