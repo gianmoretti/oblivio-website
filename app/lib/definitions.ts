@@ -65,24 +65,9 @@ export type DesignatedTableType = {
   total_paid: number,
 }
 
-export type FormattedDesignatedTable = {
+export type DesignatedForm = {
   id: string,
-  name: string,
-  email: string,
-  image_url: string,
-  total_assets: number,
-  total_pending: string,
-  total_paid: string,
-}
-
-export type DesignatedField = {
-  id: string,
-  name: string,
-}
-
-export type AssetForm = {
-  id: string,
-  customer_id: string,
-  amount: number,
-  status: "pending" | "paid",
+  firstName: string,
+  lastName: string,
+  fiscalCode: string,
 }

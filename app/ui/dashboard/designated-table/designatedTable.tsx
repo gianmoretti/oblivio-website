@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { lusitana } from "@/app/ui/fonts";
+
 import { Designated } from "@/app/lib/model";
 import {
   Avatar,

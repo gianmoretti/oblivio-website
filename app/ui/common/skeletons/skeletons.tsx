@@ -203,7 +203,7 @@ export function AssetsMobileSkeleton() {
   );
 }
 
-export function AssetsTableSkeleton() {
+export function DesignatedTableSkeleton() {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">

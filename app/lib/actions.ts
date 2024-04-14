@@ -7,103 +7,135 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-const AssetValidationSchema = z.object({
+const phoneRegex = new RegExp(
+    /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+);
+
+const schema = z.object({
+    phone: z.string().regex(phoneRegex, 'Invalid Number!'),
+})
+
+const DesignatedValidationSchema = z.object({
     id: z.string(),
-    designatedId: z.string({ invalid_type_error: 'Please select a designated.' }),
-    amount: z.coerce.number().gt(0, { message: 'Please enter an amount greater than $0.' }),
-    status: z.enum(['pending', 'paid'], { invalid_type_error: 'Please select an invoice status.', }),
-    date: z.string(),
+    firstName: z.string({ invalid_type_error: 'Please insert a valid first name.' })
+        .min(1, { message: "This field has to be filled." }),
+    lastName: z.string({ invalid_type_error: 'Please insert a valid last name.' })
+        .min(1, { message: "This field has to be filled." }),
+    fiscalCode: z.string({ invalid_type_error: 'Please insert a fiscal code.' })
+        .min(1, { message: "This field has to be filled." }),
+    email: z.string({ invalid_type_error: 'Please insert a valid email.' })
+        .min(1, { message: "This field has to be filled." })
+        .email("This is not a valid email."),
+    birthPlace: z.string({ invalid_type_error: 'Please insert a valid birth place.' })
+        .min(1, { message: "This field has to be filled." }),
+    birthDate: z.coerce.date()
+        .refine((date) => date < new Date(), { message: 'Birth date must be in the past' }),
+    residence: z.string({ invalid_type_error: 'Please insert a valid residence.' })
+        .min(1, { message: "This field has to be filled." }),
+    phoneNumber: z.string({ invalid_type_error: 'Please insert a valid phoneNumber.' })
+        .min(1, { message: "This field has to be filled." })
+        .regex(phoneRegex, 'Invalid Number!'),
 });
 
 
-const AssetToSave = AssetValidationSchema.omit({ id: true, date: true });
+const DesignatedToSave = DesignatedValidationSchema.omit({ id: true, date: true });
 
 export type State = {
     errors?: {
-        designatedId?: string[];
-        amount?: string[];
-        status?: string[];
+        firstName?: string[];
+        lastName?: string[];
+        fiscalCode?: string[];
+        email?: string[];
+        birthPlace?: string[];
+        birthDate?: string[];
+        residence?: string[];
+        phoneNumber?: string[];
     };
     message?: string | null;
 };
 
-export async function createAsset(prevState: State, formData: FormData) {
-    //const rawFormData = Object.fromEntries(formData.entries())
+export async function createDesignated(prevState: State, formData: FormData) {
     const rawFormData = {
-        designatedId: formData.get('designatedId'),
-        amount: formData.get('amount'),
-        status: formData.get('status'),
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        fiscalCode: formData.get('fiscalCode'),
+        email: formData.get('email'),
+        birthPlace: formData.get('birthPlace'),
+        birthDate: formData.get('birthDate'),
+        residence: formData.get('residence'),
+        phoneNumber: formData.get('phoneNumber'),
     };
-    // Test it out:
     console.log(rawFormData);
 
-    const validatedFields = AssetToSave.safeParse(rawFormData);
+    const validatedFields = DesignatedToSave.safeParse(rawFormData);
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to create Asset.',
+            message: 'Missing Fields. Failed to create Designated.',
         };
     }
 
-    const { designatedId, amount, status } = validatedFields.data;
-    const amountInCents = amount * 100;
-    const date = new Date().toISOString().split('T')[0];
+    const { firstName, lastName, fiscalCode, email, birthPlace, birthDate, residence, phoneNumber } = validatedFields.data;
     try {
-        await sql`
-        INSERT INTO assets (customer_id, amount, status, date)
-        VALUES (${designatedId}, ${amountInCents}, ${status}, ${date})
-    `;
+        //TODO Add call to fetch for creation
     } catch (error) {
         return {
-            message: 'Database Error: Failed to Create Asset.',
+            message: 'Database Error: Failed to create Designated.',
         };
     }
-    revalidatePath('/dashboard/assets');
-    redirect('/dashboard/assets');
+    revalidatePath('/dashboard/designated');
+    redirect('/dashboard/designated');
 }
 
-export async function editAsset(id: string, prevState: State, formData: FormData) {
+export async function editDesignated(id: string, _prevState: State, formData: FormData) {
     const rawFormData = {
-        designatedId: formData.get('designatedId'),
-        amount: formData.get('amount'),
-        status: formData.get('status'),
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        fiscalCode: formData.get('fiscalCode'),
+        email: formData.get('email'),
+        birthPlace: formData.get('birthPlace'),
+        birthDate: formData.get('birthDate'),
+        residence: formData.get('residence'),
+        phoneNumber: formData.get('phoneNumber'),
     };
-    const validatedFields = AssetToSave.safeParse(rawFormData);
+    console.log("PREV_STATE---->", _prevState);
+    const validatedFields = DesignatedToSave.safeParse(rawFormData);
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to edit Asset.',
+            message: 'Missing Fields. Failed to edit Designated.',
         };
     }
-    const { designatedId, amount, status } = validatedFields.data;
-    const amountInCents = amount * 100;
-    const date = new Date().toISOString().split('T')[0];
+    const { firstName, lastName, fiscalCode, email, birthPlace, birthDate, residence, phoneNumber } = validatedFields.data;
     try {
-        await sql`
-        UPDATE assets 
-        set 
-            customer_id = ${designatedId}, 
-            amount = ${amountInCents},
-            status = ${status},
-            date = ${date}
-        WHERE
-            id = ${id}
-    `;
+        const response = await execBackendQuery("POST", `designateds/${id}`, {
+            first_name: firstName,
+            last_name: lastName,
+            fiscal_code: fiscalCode,
+            email,
+            birth_date: birthDate.toISOString().substring(0, 10),
+            birth_place: birthPlace,
+            residence,
+            phone_number: phoneNumber,
+        });
+        console.log("RESPONSE ---> ", response);
     } catch (error) {
-        return { message: 'Database Error: Failed to Update Asset.' };
+        console.log(error);
+        return { message: 'Database Error: Failed to Update Designated.' };
     }
 
-    revalidatePath('/dashboard/assets');
-    redirect('/dashboard/assets');
+    revalidatePath('/dashboard/designated');
+    redirect('/dashboard/designated');
 }
 
-export async function deleteAsset(id: string) {
+export async function deleteDesignated(id: string) {
     try {
-        await sql`DELETE FROM assets WHERE id = ${id}`;
+        await sql`DELETE FROM invoices WHERE id = ${id}`;
     } catch (error) {
-        return { message: 'Database Error: Failed to Delete Asset.' };
+        console.log(error);
+        return { message: 'Database Error: Failed to Delete Designated.' };
     }
-    revalidatePath('/dashboard/assets');
+    revalidatePath('/dashboard/designated');
 }
 
 export async function authenticateWithCredentials(
@@ -136,4 +168,20 @@ export async function authenticateWithGoogle(
         }
         throw error;
     }
+}
+
+async function execBackendQuery(method: string, apiPath: string, body?: any) {
+    console.log("method:", method);
+    const fullPath = `${process.env.BACKEND_API_URL!!}/api/${apiPath}`;
+    console.log("fullPath:", fullPath);
+    console.log("body:", body);
+    const response = await fetch(fullPath, {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    });
+    const result = await response.json();
+    return result;
 }
