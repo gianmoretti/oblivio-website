@@ -1,11 +1,11 @@
 import Image from "next/image";
-import { UpdateDesignated, DeleteDesignated } from "@/app/ui/designated/buttons";
 import { fetchAllDesignated } from "@/app/lib/data";
 import { Designated } from '../../lib/model/product';
+import { deleteDesignated } from "@/app/lib/actions";
+import { DeleteEntity, UpdateEntity } from "../common/crud-buttons";
 
 export default async function DesignatedTable() {
   const designateds = await fetchAllDesignated();
-  console.log("DESIGANTED ----->", designateds);
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -38,8 +38,8 @@ export default async function DesignatedTable() {
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateDesignated id={designated.id} />
-                    <DeleteDesignated id={designated.id} />
+                    <UpdateEntity id={designated.id} entity={'designated'} label={'Designated'} />
+                    <DeleteEntity id={designated.id} action={deleteDesignated} />
                   </div>
                 </div>
               </div>
@@ -90,8 +90,8 @@ export default async function DesignatedTable() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateDesignated id={designated.id} />
-                      <DeleteDesignated id={designated.id} />
+                      <UpdateEntity id={designated.id} entity={'designateds'} label={'Designated'} />
+                      <DeleteEntity id={designated.id} action={deleteDesignated} />
                     </div>
                   </td>
                 </tr>

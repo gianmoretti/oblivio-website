@@ -6,10 +6,10 @@ const AssetCreatePage: React.FC = async () => {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Asset", href: "/dashboard/asset" },
+          { label: "Asset", href: "/dashboard/assets" },
           {
             label: "Create Asset",
-            href: "/dashboard/asset/create",
+            href: "/dashboard/assets/create",
             active: true,
           },
         ]}

@@ -1,7 +1,7 @@
 import Table from "@/app/ui/designated/table";
-import { CreateDesignated } from "@/app/ui/designated/buttons";
 import { EntitiesTableSkeleton } from "@/app/ui/common/skeletons/skeletons";
 import { Suspense } from "react";
+import { CreateEntity } from "@/app/ui/common/crud-buttons";
 
 const DesignatedPage: React.FC = async () => {
   return (
@@ -10,7 +10,7 @@ const DesignatedPage: React.FC = async () => {
         <h1 className="text-2xl">Designated</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <CreateDesignated />
+        <CreateEntity entity={"designated"} label={"Designated"} />
       </div>
       <Suspense fallback={<EntitiesTableSkeleton />}>
         <Table />

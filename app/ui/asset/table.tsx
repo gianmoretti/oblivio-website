@@ -1,10 +1,10 @@
 import { Asset } from '../../lib/model/product';
 import { fetchAllAssets } from "@/app/lib/data";
-import { DeleteAsset, UpdateAsset } from "./buttons";
+import { DeleteEntity, UpdateEntity } from "../common/crud-buttons";
+import { deleteAsset } from '@/app/lib/actions';
 
 export default async function AssetTable() {
   const assets = await fetchAllAssets();
-  console.log("DESIGANTED ----->", assets);
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -32,8 +32,8 @@ export default async function AssetTable() {
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateAsset id={asset.id} />
-                    <DeleteAsset id={asset.id} />
+                    <UpdateEntity id={asset.id} entity={'assets'} label={'Asset'} />
+                    <DeleteEntity id={asset.id} action={deleteAsset} />
                   </div>
                 </div>
               </div>
@@ -76,8 +76,8 @@ export default async function AssetTable() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateAsset id={asset.id} />
-                      <DeleteAsset id={asset.id} />
+                      <UpdateEntity id={asset.id} entity={'assets'} label={'Asset'} />
+                      <DeleteEntity id={asset.id} action={deleteAsset} />
                     </div>
                   </td>
                 </tr>
