@@ -99,7 +99,7 @@ const HomePage: React.FC = async () => {
       <UISection baseSection={reasonsSection} />
       <UISection baseSection={processSection} />
       <UISection baseSection={featureSection}>
-        <div className="grid grid-cols-2 gap-6 px-6 pb-6">
+        <div className="grid md:grid-cols-2 gap-6 px-6 pb-6">
           {featureSection.features.map((feature) => (
             <Card className="bg-white" key={feature.title}>
               <CardHeader>
