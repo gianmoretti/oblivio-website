@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/app/ui/common/button/button";
 import { editDesignated } from "@/app/lib/actions";
 import { useFormState } from "react-dom";
-import { Designated } from "@/app/lib/model";
+import { Designated } from "@/app/lib/model/product";
 
 export default function EditDesignatedForm({
   designated,

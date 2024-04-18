@@ -1,4 +1,4 @@
-import { CategoryType, Designated } from "../../../../app/lib/model";
+import { CategoryType, Designated } from "../../../lib/model/product";
 import {
   Card,
   CardContent,

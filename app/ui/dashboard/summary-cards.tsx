@@ -1,4 +1,4 @@
-import { fetchSummaryCardsData } from "@/app/lib/repository";
+import { fetchSummaryCardsData } from "@/app/lib/data";
 import SummaryCard from "./summary-card/summaryCard";
 
 const SummaryCardsWrapper: React.FC = async () => {

@@ -1,4 +1,4 @@
-import { fetchDesignated } from "@/app/lib/data";
+import { fetchAllDesignated } from "@/app/lib/data";
 import Breadcrumbs from "@/app/ui/designated/breadcrumbs";
 import Form from "@/app/ui/designated/create-form";
 import React from "react";

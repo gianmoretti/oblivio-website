@@ -1,6 +1,5 @@
 'use server';
 
-import { sql } from '@vercel/postgres';
 import { AuthError } from 'next-auth';
 import { signIn } from '@/auth';
 import { revalidatePath } from 'next/cache';
@@ -55,50 +54,14 @@ export type State = {
 };
 
 export async function createDesignated(prevState: State, formData: FormData) {
-    const rawFormData = {
-        firstName: formData.get('firstName'),
-        lastName: formData.get('lastName'),
-        fiscalCode: formData.get('fiscalCode'),
-        email: formData.get('email'),
-        birthPlace: formData.get('birthPlace'),
-        birthDate: formData.get('birthDate'),
-        residence: formData.get('residence'),
-        phoneNumber: formData.get('phoneNumber'),
-    };
-    console.log(rawFormData);
-
-    console.log("PREV_STATE---->", prevState);
-    const validatedFields = DesignatedToSave.safeParse(rawFormData);
-    if (!validatedFields.success) {
-        return {
-            errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to create Designated.',
-        };
-    }
-
-    const { firstName, lastName, fiscalCode, email, birthPlace, birthDate, residence, phoneNumber } = validatedFields.data;
-    try {
-        const response = await execBackendQuery("POST", 'designateds', {
-            first_name: firstName,
-            last_name: lastName,
-            fiscal_code: fiscalCode,
-            email,
-            birth_date: birthDate.toISOString().substring(0, 10),
-            birth_place: birthPlace,
-            residence,
-            phone_number: phoneNumber,
-        });
-        console.log("RESPONSE ---> ", response);
-    } catch (error) {
-        return {
-            message: 'Database Error: Failed to create Designated.',
-        };
-    }
-    revalidatePath('/dashboard/designated');
-    redirect('/dashboard/designated');
+    return upsertDesignated(formData, prevState, undefined);
 }
 
-export async function editDesignated(id: string, _prevState: State, formData: FormData) {
+export async function editDesignated(id: string, prevState: State, formData: FormData) {
+    return upsertDesignated(formData, prevState, id);
+}
+
+export async function upsertDesignated(formData: FormData, _prevState: State, id?: string) {
     const rawFormData = {
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
@@ -109,17 +72,18 @@ export async function editDesignated(id: string, _prevState: State, formData: Fo
         residence: formData.get('residence'),
         phoneNumber: formData.get('phoneNumber'),
     };
-    console.log("PREV_STATE---->", _prevState);
+
     const validatedFields = DesignatedToSave.safeParse(rawFormData);
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to edit Designated.',
+            message: 'Failed to act on Designated.',
         };
     }
+
     const { firstName, lastName, fiscalCode, email, birthPlace, birthDate, residence, phoneNumber } = validatedFields.data;
     try {
-        const response = await execBackendQuery("POST", `designateds/${id}`, {
+        await execBackendQuery("POST", `designateds${id ? `/${id}` : ''}`, {
             first_name: firstName,
             last_name: lastName,
             fiscal_code: fiscalCode,
@@ -129,21 +93,18 @@ export async function editDesignated(id: string, _prevState: State, formData: Fo
             residence,
             phone_number: phoneNumber,
         });
-        console.log("RESPONSE ---> ", response);
     } catch (error) {
-        console.log(error);
-        return { message: 'Database Error: Failed to Update Designated.' };
+        return {
+            message: 'Database Error: Failed to act on Designated.',
+        };
     }
-
     revalidatePath('/dashboard/designated');
     redirect('/dashboard/designated');
 }
 
 export async function deleteDesignated(id: string) {
     try {
-        console.log("DELETE IN PROGRESS");
-        const response = await execBackendQuery("DELETE", `designateds/${id}`, undefined);
-        console.log("RESPONSE ---> ", response);
+        await execBackendQuery("DELETE", `designateds/${id}`, undefined);
     } catch (error) {
         console.log(error);
         return { message: 'Database Error: Failed to Delete Designated.' };

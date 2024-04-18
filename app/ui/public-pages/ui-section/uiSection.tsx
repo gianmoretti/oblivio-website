@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
-import { Section } from "@/app/lib/definitions";
+import { Section } from "@/app/lib/model/common";
 
 interface UISectionProps {
   baseSection: Section;

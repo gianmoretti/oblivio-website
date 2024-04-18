@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import { Designated } from "@/app/lib/model";
+import { Designated } from "@/app/lib/model/product";
 import {
   Avatar,
   AvatarFallback,

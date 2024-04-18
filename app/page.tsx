@@ -1,4 +1,4 @@
-import { Section } from "./lib/definitions";
+import { Section } from "./lib/model/common";
 import { loadAllFeaturesSection, loadEnrollmentSection, loadHeroSection, loadProcessSection, loadReasonSection, loadSubscriptionPlanSection, loadSubscriptionPlans } from "./lib/data";
 import UISection from "./ui/public-pages/ui-section/uiSection";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import {
 } from "./ui/common/card/card";
 import React from "react";
 import Menu from "./ui/public-pages/menu/menu";
-import { GraphQLSection, Plan } from "./lib/graphql-models";
+import { GraphQLSection, Plan } from "./lib/model/site";
 
 interface Feature {
   icon?: string;

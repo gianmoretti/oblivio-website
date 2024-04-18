@@ -1,8 +1,8 @@
-import { fetchAllDesignated } from "@/app/lib/repository";
+import { fetchFakeDesignated } from "@/app/lib/data";
 import DesignatedCard from "./designated-card/designatedCard";
 
 const AllDesignated: React.FC = async () => {
-  const allDesignated = await fetchAllDesignated();
+  const allDesignated = await fetchFakeDesignated();
 
   return (
     <div className="flex w-full flex-col col-span-2 md:col-span-8">

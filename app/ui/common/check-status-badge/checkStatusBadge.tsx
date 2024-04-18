@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import Badge from "../badge/badge";
-import { VerificationStatus } from "@/app/lib/model";
+import { VerificationStatus } from "@/app/lib/model/product";
 
 export interface CheckStatusBadgeProps
   extends React.HTMLAttributes<HTMLDivElement> {

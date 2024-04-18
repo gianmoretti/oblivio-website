@@ -1,4 +1,4 @@
-import { fetchDesignated, fetchDesignatedById } from "@/app/lib/data";
+import { fetchAllDesignated, fetchDesignatedById } from "@/app/lib/data";
 import Breadcrumbs from "@/app/ui/designated/breadcrumbs";
 import Form from "@/app/ui/designated/edit-form";
 import { notFound } from "next/navigation";

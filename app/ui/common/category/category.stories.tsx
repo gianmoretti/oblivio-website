@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from "@storybook/react";
 import Category from "./category";
-import { CategoryType } from "@/app/lib/model";
+import { CategoryType } from "@/app/lib/model/product";
 
 const meta = {
   title: "Oblivio/Category",

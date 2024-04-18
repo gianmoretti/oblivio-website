@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import CheckStatusBadge from "./checkStatusBadge";
-import { VerificationStatus } from "@/app/lib/model";
+import { VerificationStatus } from "@/app/lib/model/product";
 
 const meta = {
   title: "Oblivio/CheckStatusBadge",

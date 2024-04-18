@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import DesignatedTable from "./designatedTable";
-import { Designated } from "@/app/lib/model";
+import { Designated } from "@/app/lib/model/product";
 
 const meta = {
   title: "Oblivio/DesignatedTable",

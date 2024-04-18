@@ -1,4 +1,4 @@
-import { CategoryType } from "@/app/lib/model";
+import { CategoryType } from "@/app/lib/model/product";
 import { clsx } from "clsx";
 import {
   BanknotesIcon,

@@ -1,8 +1,8 @@
-import { fetchAllAssets } from "@/app/lib/repository";
+import { fetchFakeAssets } from "@/app/lib/data";
 import AssetCard from "./asset-card/assetCard";
 
 const AllAssets: React.FC = async () => {
-  const allAssets = await fetchAllAssets();
+  const allAssets = await fetchFakeAssets();
 
   return (
     <div className="flex w-full flex-col col-span-2 md:col-span-8">

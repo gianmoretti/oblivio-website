@@ -4,7 +4,7 @@ import {
   MeansType,
   Verification,
   VerificationStatus,
-} from "../../../lib/model";
+} from "../../../lib/model/product";
 import {
   Card,
   CardContent,

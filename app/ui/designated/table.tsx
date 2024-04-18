@@ -2,11 +2,11 @@ import Image from "next/image";
 import { UpdateDesignated, DeleteDesignated } from "@/app/ui/designated/buttons";
 import DesignatedStatus from "@/app/ui/designated/status";
 import { formatDateToLocal, formatCurrency } from "@/app/lib/utils";
-import { fetchDesignated } from "@/app/lib/data";
-import { Designated } from '../../lib/model';
+import { fetchAllDesignated } from "@/app/lib/data";
+import { Designated } from '../../lib/model/product';
 
 export default async function DesignatedTable() {
-  const designateds = await fetchDesignated();
+  const designateds = await fetchAllDesignated();
   console.log("DESIGANTED ----->", designateds);
   return (
     <div className="mt-6 flow-root">

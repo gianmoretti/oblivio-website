@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import AssetCard from "./assetCard";
-import { CategoryType } from "@/app/lib/model";
+import { CategoryType } from "@/app/lib/model/product";
 
 const meta = {
   title: "Oblivio/AssetCard",

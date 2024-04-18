@@ -1,4 +1,4 @@
-import { Plan } from "@/app/lib/graphql-models";
+import { Plan } from "@/app/lib/model/site";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
