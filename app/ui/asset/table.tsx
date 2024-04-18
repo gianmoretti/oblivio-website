@@ -1,45 +1,39 @@
-import Image from "next/image";
-import { UpdateDesignated, DeleteDesignated } from "@/app/ui/designated/buttons";
-import { fetchAllDesignated } from "@/app/lib/data";
-import { Designated } from '../../lib/model/product';
+import { Asset } from '../../lib/model/product';
+import { fetchAllAssets } from "@/app/lib/data";
+import { DeleteAsset, UpdateAsset } from "./buttons";
 
-export default async function DesignatedTable() {
-  const designateds = await fetchAllDesignated();
-  console.log("DESIGANTED ----->", designateds);
+export default async function AssetTable() {
+  const assets = await fetchAllAssets();
+  console.log("DESIGANTED ----->", assets);
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {designateds?.map((designated: Designated) => (
+            {assets?.map((asset: Asset) => (
               <div
-                key={designated.id}
+                key={asset.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      {designated.imageUrl && (<Image
-                        src={designated.imageUrl}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${designated.firstName}'s profile picture`}
-                      />)}
-                      <p>{designated.firstName} {designated.lastName}</p>
+                      
+                      <p>{asset.category}</p>
+                      <p>{asset.name}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{designated.email}</p>
+                    <p className="text-sm text-gray-500">{asset.updatedAt}</p>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {designated.fiscalCode}
+                      {asset.description}
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateDesignated id={designated.id} />
-                    <DeleteDesignated id={designated.id} />
+                    <UpdateAsset id={asset.id} />
+                    <DeleteAsset id={asset.id} />
                   </div>
                 </div>
               </div>
@@ -49,13 +43,13 @@ export default async function DesignatedTable() {
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Designated
+                  Name
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
+                  Update at
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Fiscal code
+                  Description
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -63,35 +57,27 @@ export default async function DesignatedTable() {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {designateds?.map((designated) => (
+              {assets?.map((asset) => (
                 <tr
-                  key={designated.id}
+                  key={asset.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      {designated.imageUrl && (
-                      <Image
-                        src={designated.imageUrl}
-                        className="rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${designated.firstName} ${designated.lastName}'s profile picture`}
-                      />
-                    )}
-                    <p>{designated.firstName} {designated.lastName}</p>
+                    <p>{asset.category}</p>
+                    <p>{asset.name}</p>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {designated.email}
+                    {asset.updatedAt}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                   {designated.fiscalCode}
+                   {asset.description}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateDesignated id={designated.id} />
-                      <DeleteDesignated id={designated.id} />
+                      <UpdateAsset id={asset.id} />
+                      <DeleteAsset id={asset.id} />
                     </div>
                   </td>
                 </tr>

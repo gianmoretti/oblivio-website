@@ -1,8 +1,6 @@
-import Pagination from "@/app/ui/designated/pagination";
-import Search from "@/app/ui/common/search/search";
 import Table from "@/app/ui/designated/table";
 import { CreateDesignated } from "@/app/ui/designated/buttons";
-import { DesignatedTableSkeleton } from "@/app/ui/common/skeletons/skeletons";
+import { EntitiesTableSkeleton } from "@/app/ui/common/skeletons/skeletons";
 import { Suspense } from "react";
 
 const DesignatedPage: React.FC = async () => {
@@ -14,7 +12,7 @@ const DesignatedPage: React.FC = async () => {
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <CreateDesignated />
       </div>
-      <Suspense fallback={<DesignatedTableSkeleton />}>
+      <Suspense fallback={<EntitiesTableSkeleton />}>
         <Table />
       </Suspense>
     </div>

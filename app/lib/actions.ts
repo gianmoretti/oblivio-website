@@ -10,10 +10,6 @@ const phoneRegex = new RegExp(
     /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
 
-const schema = z.object({
-    phone: z.string().regex(phoneRegex, 'Invalid Number!'),
-})
-
 const DesignatedValidationSchema = z.object({
     id: z.string(),
     firstName: z.string({ invalid_type_error: 'Please insert a valid first name.' })
@@ -36,10 +32,20 @@ const DesignatedValidationSchema = z.object({
         .regex(phoneRegex, 'Invalid Number!'),
 });
 
+const AssetValidationSchema = z.object({
+    id: z.string(),
+    category: z.string({ invalid_type_error: 'Please insert a valid category.' })
+        .min(1, { message: "This field has to be filled." }),
+    name: z.string({ invalid_type_error: 'Please insert a valid name.' })
+        .min(1, { message: "This field has to be filled." }),
+    description: z.string({ invalid_type_error: 'Please insert a valid description.' })
+        .min(1, { message: "This field has to be filled." }),
+});
 
 const DesignatedToSave = DesignatedValidationSchema.omit({ id: true, date: true });
+const AssetToSave = AssetValidationSchema.omit({ id: true, date: true });
 
-export type State = {
+export type DesignatedState = {
     errors?: {
         firstName?: string[];
         lastName?: string[];
@@ -53,15 +59,25 @@ export type State = {
     message?: string | null;
 };
 
-export async function createDesignated(prevState: State, formData: FormData) {
+export type AssetState = {
+    errors?: {
+        category?: string[];
+        name?: string[];
+        updatedAt?: string[];
+        description?: string[];
+    };
+    message?: string | null;
+};
+
+export async function createDesignated(prevState: DesignatedState, formData: FormData) {
     return upsertDesignated(formData, prevState, undefined);
 }
 
-export async function editDesignated(id: string, prevState: State, formData: FormData) {
+export async function editDesignated(id: string, prevState: DesignatedState, formData: FormData) {
     return upsertDesignated(formData, prevState, id);
 }
 
-export async function upsertDesignated(formData: FormData, _prevState: State, id?: string) {
+export async function upsertDesignated(formData: FormData, _prevState: DesignatedState, id?: string) {
     const rawFormData = {
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
@@ -111,6 +127,58 @@ export async function deleteDesignated(id: string) {
     }
     revalidatePath('/dashboard/designated');
 }
+
+
+export async function createAsset(prevState: AssetState, formData: FormData) {
+    return upsertAsset(formData, prevState, undefined);
+}
+
+export async function editAsset(id: string, prevState: AssetState, formData: FormData) {
+    return upsertAsset(formData, prevState, id);
+}
+
+export async function upsertAsset(formData: FormData, _prevState: AssetState, id?: string) {
+    const rawFormData = {
+        category: formData.get('category'),
+        name: formData.get('name'),
+        description: formData.get('description'),
+    };
+
+    const validatedFields = AssetToSave.safeParse(rawFormData);
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Failed to act on Asset.',
+        };
+    }
+
+    const { category, name, description } = validatedFields.data;
+    try {
+        await execBackendQuery("POST", `assets${id ? `/${id}` : ''}`, {
+            category,
+            name,
+            description,
+            updated_at: new Date().toISOString(),
+        });
+    } catch (error) {
+        return {
+            message: 'Database Error: Failed to act on Asset.',
+        };
+    }
+    revalidatePath('/dashboard/asset');
+    redirect('/dashboard/asset');
+}
+
+export async function deleteAsset(id: string) {
+    try {
+        await execBackendQuery("DELETE", `assets/${id}`, undefined);
+    } catch (error) {
+        console.log(error);
+        return { message: 'Database Error: Failed to Delete Asset.' };
+    }
+    revalidatePath('/dashboard/asset');
+}
+
 
 export async function authenticateWithCredentials(
     prevState: string | undefined,

@@ -1,5 +1,5 @@
-import { fetchAllDesignated, fetchDesignatedById } from "@/app/lib/data";
-import Breadcrumbs from "@/app/ui/designated/breadcrumbs";
+import { fetchDesignatedById } from "@/app/lib/data";
+import Breadcrumbs from "@/app/ui/common/breadcrumb/breadcrumbs";
 import Form from "@/app/ui/designated/edit-form";
 import { notFound } from "next/navigation";
 import React from "react";

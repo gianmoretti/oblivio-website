@@ -1,5 +1,5 @@
 import { sql } from "@vercel/postgres";
-import { User, Designated } from './model/product';
+import { User, Designated, Asset } from './model/product';
 import * as changeCase from "change-case";
 import { unstable_noStore as noStore } from 'next/cache';
 import { allAssets, allDesignatedUsers } from './fixture/fake-data';
@@ -222,6 +222,43 @@ export async function fetchDesignatedById(id: string) {
   } catch (err) {
     console.error("Database Error:", err);
     throw new Error("Failed to fetch all designated.");
+  }
+}
+
+
+export async function fetchAllAssets() {
+  noStore();
+  try {
+    const response: any[] = await execBackendQuery("GET", 'assets');
+    console.log("response:", response);
+    const camelCaseArray = response.map(obj =>
+      Object.fromEntries(
+        Object.entries(obj).map(([key, value]) => [changeCase.camelCase(key), value])
+      )
+    );
+    console.log("camelCaseObject:", camelCaseArray);
+    const assets = camelCaseArray as any as Asset[];
+    console.log("assets:", assets);
+    return assets as Asset[];
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw new Error("Failed to fetch all assets.");
+  }
+}
+
+export async function fetchAssetById(id: string) {
+  noStore();
+
+  try {
+    const response: any = await execBackendQuery("GET", `assets/${id}`);
+    console.log("response:", response);
+    const assets = Object.fromEntries(
+      Object.entries(response).map(([key, value]) => [changeCase.camelCase(key), value])
+    ) as any as Asset;
+    return assets
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw new Error("Failed to fetch all assets.");
   }
 }
 
