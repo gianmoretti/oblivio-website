@@ -5,6 +5,7 @@ import { signIn } from '@/auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import { unstable_noStore as noStore } from 'next/cache';
 
 const phoneRegex = new RegExp(
     /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -43,7 +44,7 @@ const AssetValidationSchema = z.object({
 });
 
 const AssetWithDesignatedValidationSchema = z.object({
-    designatedIds: z.string().min(1, { message: "This field has to be filled." }),
+    designatedIds: z.string().regex(/^\d+(,\d+)*$/, "This field should be a valid list of numbers"),
 });
 
 const DesignatedToSave = DesignatedValidationSchema.omit({ id: true, date: true });
@@ -190,10 +191,10 @@ export async function deleteAsset(id: string) {
 }
 
 export async function associateAssetWithDesignated(assetId: string, _prevState: AssetWithDesignatedState, formData: FormData) {
+    noStore();
+
     const rawFormData = {
         designatedIds: formData.get('designatedIds'),
-        name: formData.get('name'),
-        description: formData.get('description'),
     };
     const validatedFields = AssetWithDesignatedValidationSchema.safeParse(rawFormData);
     if (!validatedFields.success) {
@@ -206,12 +207,32 @@ export async function associateAssetWithDesignated(assetId: string, _prevState: 
     try {
         const { designatedIds } = validatedFields.data;
         const designatedIdList = designatedIds.split(",").map((id) => parseInt(id.trim()));
-        designatedIdList.forEach(async (id) => {
-            await execBackendQuery("POST", 'asset_designateds', {
-                asset_id: parseInt(assetId),
-                designated_id: id,
+
+        console.log("designatedIdList:", designatedIdList);
+
+        type assetDesignatedType = { id: number, asset_id: number, designated_id: number };
+        const existingDesignated: assetDesignatedType[] = await execBackendQuery("GET", `asset_designateds/query?asset_id=${assetId}`);
+
+        console.log("Existing: ", existingDesignated);
+
+        // Delete the ones no more existing
+        existingDesignated.forEach(async (it: assetDesignatedType) => {
+            if (!designatedIdList.includes(it.designated_id)) {
+                console.log("Deleting:", it.designated_id);
+                await execBackendQuery("DELETE", `asset_designateds/${it.id}`, undefined);
+            }
+        })
+
+        // Add the new ones
+        designatedIdList
+            .filter((designatedId) => !existingDesignated.some((existingOne) => existingOne.designated_id === designatedId))
+            .forEach(async (id) => {
+                console.log("Adding:", id)
+                await execBackendQuery("POST", 'asset_designateds', {
+                    asset_id: parseInt(assetId),
+                    designated_id: id,
+                });
             });
-        });
     } catch (error) {
         return {
             message: 'Database Error: Failed to assign designated to asset.',

@@ -5,6 +5,8 @@ import { Button } from "@/app/ui/common/button/button";
 import { associateAssetWithDesignated } from "@/app/lib/actions";
 import { useFormState } from "react-dom";
 import { Asset, Designated } from "@/app/lib/model/product";
+import Multiselect from 'multiselect-react-dropdown';
+import { useCallback, useMemo, useState } from "react";
 
 export default function AssociateAssetWithDesignatedForm({
   asset,
@@ -17,7 +19,23 @@ export default function AssociateAssetWithDesignatedForm({
   const associateAssetWithDesignatedById = associateAssetWithDesignated.bind(null, asset.id);
   const [state, dispatch] = useFormState(associateAssetWithDesignatedById, initialState);
 
-  const existingDesignatedIds = asset.designatedList.map((designated)=> designated.id).join(",");
+  const designatedMapper = (designated: Designated) => ({
+    name: `${designated.firstName} ${designated.lastName}`,
+    id: designated.id,
+  });
+  const designatedOptions = useMemo(() => possibleDesignated.map(designatedMapper),[possibleDesignated]);
+  console.log("----> OPTIONS:", designatedOptions);
+
+  const existingDesignatedIds = useMemo(()=>asset.designatedList.map(designatedMapper),[asset.designatedList]);
+  console.log("----> EXISTING: ", existingDesignatedIds);
+
+  const [designatedIds, setDesignatedIds] = useState<string[]>(existingDesignatedIds.map(d => d.id));
+
+  const onChange = useCallback((selectedList: any, selectedItem: any) => {
+                  console.log("----> SELECTED: ", selectedList, selectedItem);
+                  setDesignatedIds(selectedList.map((d: any) => d.id));
+                }, []);
+
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -29,13 +47,14 @@ export default function AssociateAssetWithDesignatedForm({
             to assign to designated below:
           </label>
           <div className="relative mt-2 rounded-md">
+            <input type="hidden" name="designatedIds" value={designatedIds} />
             <div className="relative">
-              <input
-                id="designatedIds"
-                name="designatedIds"
-                defaultValue={existingDesignatedIds}
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="category-error"
+              <Multiselect
+                options={designatedOptions}
+                selectedValues={existingDesignatedIds}
+                displayValue="name"
+                onSelect={onChange}
+                onRemove={onChange}
               />
             </div>
           </div>
