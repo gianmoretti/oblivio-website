@@ -193,16 +193,12 @@ export async function fetchAllDesignated() {
   noStore();
   try {
     const response: any[] = await execBackendQuery("GET", 'designateds');
-    console.log("response:", response);
-    const camelCaseArray = response.map(obj =>
+    const designateds = response.map(obj =>
       Object.fromEntries(
         Object.entries(obj).map(([key, value]) => [changeCase.camelCase(key), value])
       )
-    );
-    console.log("camelCaseObject:", camelCaseArray);
-    const designateds = camelCaseArray as any as Designated[];
-    console.log("designateds:", designateds);
-    return designateds as Designated[];
+    ) as any as Designated[];
+    return designateds;
   } catch (err) {
     console.error("Database Error:", err);
     throw new Error("Failed to fetch all designated.");
@@ -251,11 +247,23 @@ export async function fetchAssetById(id: string) {
 
   try {
     const response: any = await execBackendQuery("GET", `assets/${id}`);
-    console.log("response:", response);
-    const assets = Object.fromEntries(
-      Object.entries(response).map(([key, value]) => [changeCase.camelCase(key), value])
-    ) as any as Asset;
-    return assets
+    return Object.fromEntries(Object.entries(response).map(([key, value]) => [changeCase.camelCase(key), value])) as any as Asset;
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw new Error("Failed to fetch all assets.");
+  }
+}
+
+export async function fetchEnrichedAssetById(id: string) {
+  noStore();
+
+  try {
+    const response: any = await execBackendQuery("GET", `assets/${id}/enriched`);
+    const asset = Object.fromEntries(Object.entries(response.asset).map(([key, value]) => [changeCase.camelCase(key), value])) as any as Asset;
+    asset.designatedList = response.designated_list
+      .map((it: any) => Object.fromEntries(Object.entries(it).map(([key, value]) => [changeCase.camelCase(key), value])) as any as Designated);
+    ;
+    return asset
   } catch (err) {
     console.error("Database Error:", err);
     throw new Error("Failed to fetch all assets.");

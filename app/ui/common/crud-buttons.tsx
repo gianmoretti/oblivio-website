@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, PlusIcon, TrashIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 interface CreateEntityProps {
@@ -34,7 +34,7 @@ interface DeleteEntityProps {
   action: (id: string) => void,
 }
 
-export const DeleteEntity: React.FC<DeleteEntityProps> = ({ id,action }) => {
+export const DeleteEntity: React.FC<DeleteEntityProps> = ({ id, action }) => {
   const deleteEntityWithId = action.bind(null, id);
 
   return (
@@ -46,3 +46,16 @@ export const DeleteEntity: React.FC<DeleteEntityProps> = ({ id,action }) => {
     </form>
   );
 }
+
+interface AssociateAssetWithDesignatedProps {
+  assetId: string;
+}
+
+export const AssociateAssetWithDesignated: React.FC<AssociateAssetWithDesignatedProps> = ({ assetId }) => (
+  <Link
+    href={`/dashboard/assets/${assetId}/associate`}
+    className="rounded-md border p-2 hover:bg-gray-100"
+  >
+    <UserPlusIcon className="w-5" />
+  </Link>
+);

@@ -1,7 +1,9 @@
 import { Asset } from '../../lib/model/product';
 import { fetchAllAssets } from "@/app/lib/data";
-import { DeleteEntity, UpdateEntity } from "../common/crud-buttons";
+import { AssociateAssetWithDesignated, DeleteEntity, UpdateEntity } from "../common/crud-buttons";
 import { deleteAsset } from '@/app/lib/actions';
+import { format } from "date-fns";
+
 
 export default async function AssetTable() {
   const assets = await fetchAllAssets();
@@ -18,23 +20,23 @@ export default async function AssetTable() {
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      
-                      <p>{asset.category}</p>
-                      <p>{asset.name}</p>
+                      <p>Category: <strong>{asset.category}</strong></p>
                     </div>
-                    <p className="text-sm text-gray-500">{asset.updatedAt}</p>
+                    <div className="mb-2 flex items-center">
+                      <p>Name: <strong>{asset.name}</strong></p>
+                    </div>
+                    <p className="text-sm text-gray-500">{format(new Date(asset.updatedAt),"dd/MM/yyyy") }</p>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <UpdateEntity id={asset.id} entity="assets" label="Asset" />
+                    <AssociateAssetWithDesignated assetId={asset.id} />
+                    <DeleteEntity id={asset.id} action={deleteAsset} />
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
-                  <div>
-                    <p className="text-xl font-medium">
+                    <p className="text-sm font-extralight text-justify">
                       {asset.description}
                     </p>
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <UpdateEntity id={asset.id} entity={'assets'} label={'Asset'} />
-                    <DeleteEntity id={asset.id} action={deleteAsset} />
-                  </div>
                 </div>
               </div>
             ))}
@@ -46,14 +48,11 @@ export default async function AssetTable() {
                   Name
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Update at
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
                   Description
                 </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
-                </th>
+                 <th scope="col" className="px-3 py-5 font-medium">
+                  Update at
+                </th>                
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -64,19 +63,21 @@ export default async function AssetTable() {
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                    <p>{asset.category}</p>
-                    <p>{asset.name}</p>
+                      <span>{asset.category} - {asset.name}</span>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {asset.updatedAt}
+                    <div className="w-96 truncate">
+                      {asset.description}
+                   </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                   {asset.description}
+                    {format(new Date(asset.updatedAt),"dd/MM/yyyy") }
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateEntity id={asset.id} entity={'assets'} label={'Asset'} />
+                      <UpdateEntity id={asset.id} entity="assets" label="Asset" />
+                      <AssociateAssetWithDesignated assetId={asset.id} />
                       <DeleteEntity id={asset.id} action={deleteAsset} />
                     </div>
                   </td>

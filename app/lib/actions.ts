@@ -42,6 +42,10 @@ const AssetValidationSchema = z.object({
         .min(1, { message: "This field has to be filled." }),
 });
 
+const AssetWithDesignatedValidationSchema = z.object({
+    designatedIds: z.string().min(1, { message: "This field has to be filled." }),
+});
+
 const DesignatedToSave = DesignatedValidationSchema.omit({ id: true, date: true });
 const AssetToSave = AssetValidationSchema.omit({ id: true, date: true });
 
@@ -63,8 +67,15 @@ export type AssetState = {
     errors?: {
         category?: string[];
         name?: string[];
-        updatedAt?: string[];
         description?: string[];
+    };
+    message?: string | null;
+};
+
+
+export type AssetWithDesignatedState = {
+    errors?: {
+        designatedIds?: string[];
     };
     message?: string | null;
 };
@@ -165,18 +176,50 @@ export async function upsertAsset(formData: FormData, _prevState: AssetState, id
             message: 'Database Error: Failed to act on Asset.',
         };
     }
-    revalidatePath('/dashboard/asset');
-    redirect('/dashboard/asset');
+    revalidatePath('/dashboard/assets');
+    redirect('/dashboard/assets');
 }
 
 export async function deleteAsset(id: string) {
     try {
         await execBackendQuery("DELETE", `assets/${id}`, undefined);
     } catch (error) {
-        console.log(error);
         return { message: 'Database Error: Failed to Delete Asset.' };
     }
-    revalidatePath('/dashboard/asset');
+    revalidatePath('/dashboard/assets');
+}
+
+export async function associateAssetWithDesignated(assetId: string, _prevState: AssetWithDesignatedState, formData: FormData) {
+    const rawFormData = {
+        designatedIds: formData.get('designatedIds'),
+        name: formData.get('name'),
+        description: formData.get('description'),
+    };
+    const validatedFields = AssetWithDesignatedValidationSchema.safeParse(rawFormData);
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Failed to assign designated to asset.',
+        };
+    }
+
+    try {
+        const { designatedIds } = validatedFields.data;
+        const designatedIdList = designatedIds.split(",").map((id) => parseInt(id.trim()));
+        designatedIdList.forEach(async (id) => {
+            await execBackendQuery("POST", 'asset_designateds', {
+                asset_id: parseInt(assetId),
+                designated_id: id,
+            });
+        });
+    } catch (error) {
+        return {
+            message: 'Database Error: Failed to assign designated to asset.',
+        };
+    }
+
+    revalidatePath('/dashboard/assets');
+    redirect('/dashboard/assets');
 }
 
 

@@ -38,7 +38,7 @@ export default async function DesignatedTable() {
                     </p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateEntity id={designated.id} entity={'designated'} label={'Designated'} />
+                    <UpdateEntity id={designated.id} entity="designated" label="Designated" />
                     <DeleteEntity id={designated.id} action={deleteDesignated} />
                   </div>
                 </div>
@@ -90,7 +90,7 @@ export default async function DesignatedTable() {
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateEntity id={designated.id} entity={'designateds'} label={'Designated'} />
+                      <UpdateEntity id={designated.id} entity="designated" label={'Designated'} />
                       <DeleteEntity id={designated.id} action={deleteDesignated} />
                     </div>
                   </td>

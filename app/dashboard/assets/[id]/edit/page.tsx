@@ -18,10 +18,10 @@ const AssetEditPage: React.FC<AssetEditPage> = async ({ params: { id } }) => {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Asset", href: "/dashboard/asset" },
+          { label: "Asset", href: "/dashboard/assets" },
           {
             label: "Edit Asset",
-            href: `/dashboard/asset/${id}/edit`,
+            href: `/dashboard/assets/${id}/edit`,
             active: true,
           },
         ]}
