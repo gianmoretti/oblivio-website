@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { unstable_noStore as noStore } from 'next/cache';
+import { execBackendQuery } from './utils';
 
 const phoneRegex = new RegExp(
     /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -273,38 +274,5 @@ export async function authenticateWithGoogle(
             return 'Something went wrong.';
         }
         throw error;
-    }
-}
-
-function removeUndefinedFields(obj: Record<string, any>): Record<string, any> {
-    return Object.fromEntries(
-        Object.entries(obj)
-            .filter(([_, value]) => value !== undefined)
-    );
-}
-
-async function execBackendQuery(method: string, apiPath: string, body?: any) {
-    console.log("method:", method);
-    const fullPath = `${process.env.BACKEND_API_URL!!}/api/${apiPath}`;
-    console.log("fullPath:", fullPath);
-    console.log("body:", body);
-
-    const initRequest = {
-        method,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: body ? JSON.stringify(body) : undefined,
-    };
-    console.log("initResponse:", initRequest);
-    const normalizedRequest = removeUndefinedFields(initRequest);
-    console.log("normalizedRequest:", normalizedRequest);
-    const response = await fetch(fullPath, normalizedRequest);
-    console.log(response);
-    if (method !== 'DELETE') {
-        const result = await response.json();
-        return result;
-    } else {
-        return response.status;
     }
 }

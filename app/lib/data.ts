@@ -1,8 +1,8 @@
-import { sql } from "@vercel/postgres";
 import { User, Designated, Asset } from './model/product';
 import * as changeCase from "change-case";
 import { unstable_noStore as noStore } from 'next/cache';
 import { allAssets, allDesignatedUsers } from './fixture/fake-data';
+import { execBackendQuery } from './utils';
 
 /* Public site */
 export async function loadSubscriptionPlanSection() {
@@ -270,26 +270,19 @@ export async function fetchEnrichedAssetById(id: string) {
   }
 }
 
-export async function getUser(email: string) {
+export async function getUser(email: string, password: string) {
   try {
-    const user = await sql`SELECT * FROM users WHERE email=${email}`;
-    return user.rows[0] as User;
+    const user = await execBackendQuery("POST", `auth/login`, {
+      email,
+      password,
+    });
+    const normalizedUser = Object.fromEntries(Object.entries(user).map(([key, value]) => [changeCase.camelCase(key), value])) as any as User;
+    return {
+      ...normalizedUser,
+      name: `${normalizedUser.firstName} ${normalizedUser.lastName}`,
+    } as any as User;
   } catch (error) {
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
   }
-}
-
-async function execBackendQuery(method: string, apiPath: string) {
-  console.log("method:", method);
-  const fullPath = `${process.env.BACKEND_API_URL!!}/api/${apiPath}`;
-  console.log("fullPath:", fullPath);
-  const response = await fetch(fullPath, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const result = await response.json();
-  return result;
 }

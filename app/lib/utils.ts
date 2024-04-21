@@ -71,3 +71,36 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
 export function computeInitials(firstName: string, lastName: string): string {
   return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
 }
+
+
+export async function execBackendQuery(method: string, apiPath: string, body?: any) {
+  console.log("method:", method);
+  const fullPath = `${process.env.BACKEND_API_URL!!}/api/${apiPath}`;
+  console.log("fullPath:", fullPath);
+  console.log("body:", body);
+
+  const initRequest = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  };
+  const normalizedRequest = removeUndefinedFields(initRequest);
+  const response = await fetch(fullPath, normalizedRequest);
+  console.log(response);
+  if (method !== 'DELETE') {
+    const result = await response.json();
+    console.log("result--->", result);
+    return result;
+  } else {
+    return response.status;
+  }
+}
+
+function removeUndefinedFields(obj: Record<string, any>): Record<string, any> {
+  return Object.fromEntries(
+    Object.entries(obj)
+      .filter(([_, value]) => value !== undefined)
+  );
+}
